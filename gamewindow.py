@@ -7,6 +7,7 @@ NB_CASE_Y = 7
 
 WIDTH = 400
 HEIGHT = 360
+BAND_WIDTH = 140
 COLOR_P1 = "blue"
 COLOR_P2 = "red"
 
@@ -33,6 +34,7 @@ class GameWindow:
         self.window.protocol("WM_DELETE_WINDOW", self.quit)
         self.window.title(f"Witcher - {client.nickname}")
         self.window.wm_minsize(width=WIDTH, height=HEIGHT+30)
+        self.window.wm_maxsize(width=WIDTH, height=HEIGHT+30)
 
         self.canvas = Canvas(self.window, width=WIDTH, height=HEIGHT, bg='green')
         self.quit_btn = Button(self.window, text='Quitter', command=self.quit)
@@ -80,6 +82,19 @@ class GameWindow:
         self.cases[(4, 3)] = Case(self.canvas, (4, 3), "lake")
         self.players[0] = Player(self.canvas, (0, 3), 0)
         self.players[1] = Player(self.canvas, (8, 3), 1)
+
+
+        xl = 10 + 2*XMIN
+        xr = DIST + 10 + WIDTH - BAND_WIDTH
+
+        self.left_img = PhotoImage(master=self.canvas, file="assets/bandeau_bleu.png")
+        self.left_band = self.canvas.create_image(xl, DIST, image=self.left_img)
+
+        self.right_img = PhotoImage(master=self.canvas, file="assets/bandeau_rouge.png")
+        self.right_band = self.canvas.create_image(xr, DIST, image=self.right_img)
+
+        self.canvas.create_text(xl, DIST-7, text=self.client.nickname if self.first else self.other)
+        self.canvas.create_text(xr-len(self.other)*2, DIST-7, text=self.other if self.first else self.client.nickname)
 
     def ableToMove(self):
         player = self.players[0] if self.first else self.players[1]
@@ -191,9 +206,9 @@ class GameWindow:
         player.move((i, j))
 
 if __name__ == "__main__":
-    class Client:
+    class FakeClient:
         def __init__(self):
             self.nickname = "yolo"
 
-    w = GameWindow(Client(), True)
+    w = GameWindow(FakeClient(), True, "yolo2")
     w.window.mainloop()
