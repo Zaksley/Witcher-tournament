@@ -29,13 +29,14 @@ class GameWindow:
         self.window = Tk()
         self.window.protocol("WM_DELETE_WINDOW", self.quit)
         self.window.title(f"Witcher - {client.nickname}")
+        self.window.wm_minsize(width=WIDTH, height=HEIGHT+30)
 
         self.canvas = Canvas(self.window, width=WIDTH, height=HEIGHT, bg='white')
         self.quit_btn = Button(self.window, text='Quitter', command=self.quit)
 
         self.canvas.bind("<Button-1>", self.playerMove)
         
-        self.canvas.pack(side=TOP)
+        self.canvas.pack(side=TOP, fill=BOTH, expand=True)
         self.quit_btn.pack(side=BOTTOM)
 
         #SETUP GAME
@@ -183,3 +184,11 @@ class GameWindow:
         if not self.cases[i, j].statut in forbid: self.cases[i, j].statut = "occupied"
 
         player.move((i, j))
+
+if __name__ == "__main__":
+    class Client:
+        def __init__(self):
+            self.nickname = "yolo"
+
+    w = GameWindow(Client(), True)
+    w.window.mainloop()
