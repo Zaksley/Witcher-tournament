@@ -1,5 +1,6 @@
 import sys
 from time import sleep, localtime
+from random import randint
 
 from PodSixNet.Server import Server
 from PodSixNet.Channel import Channel
@@ -79,8 +80,10 @@ class ClientChannel(Channel):
 
         self.available = False
 
-        self.launchGame(True) #False
-        self.other.launchGame(False) #True
+
+        first = randint(0, 1)
+        self.launchGame(first)
+        self.other.launchGame(not first)
 
     def Network_matchRefused(self, data):
         nickname = data["nickname"]
@@ -91,7 +94,7 @@ class ClientChannel(Channel):
         self._server.SendPlayersList()
 
     def launchGame(self, first):
-        self.Send({"action" : "launchGame", "first" : first})
+        self.Send({"action" : "launchGame", "first" : first, "nickname": self.other.nickname})
     
 class MyServer(Server):
     channelClass = ClientChannel

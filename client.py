@@ -100,7 +100,8 @@ class Client(ConnectionListener):
 
     def Network_launchGame(self, data):
         first = data["first"]
-        self.game = GameWindow(self, first)
+        nickname = data["nickname"]
+        self.game = GameWindow(self, first, nickname)
         self.askPlayersList()
         self.state = IN_GAME
  

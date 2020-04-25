@@ -17,13 +17,16 @@ IN_GAME = 2
 WAITING = 3
 
 class GameWindow:
-    def __init__(self, client, first):
+    def __init__(self, client, first, other):
         self.client = client
+        self.other = other
         self.first = first
         self.move = False
         self.state = ACTIVE if self.first else INITIAL
         self.cases = dict()
         self.players = [None, None]
+
+        self.colors = {"p1": COLOR_P1 if first else COLOR_P2, "p2": COLOR_P2 if first else COLOR_P1}
 
         #SETUP GUI
         self.window = Tk()
@@ -42,9 +45,12 @@ class GameWindow:
         #SETUP GAME
         self.drawPlateau()
 
+        messagebox.showinfo("Début", "Vous commencez !" if first else f"{self.other} commence !")
+
     def quit(self):
         if messagebox.askokcancel("Abandon", "Êtes-vous sûr de vouloir abandonner ?"):
-            #self.client.Send({"action" : "lost"})
+            self.client.Send({"action" : "lost"})
+            self.client.state = WAITING
             self.window.destroy()
 
     def drawPlateau(self):
@@ -158,7 +164,7 @@ class GameWindow:
 
                     if ((evt.x < x2) and (evt.x > x1)) and ((evt.y  < y2) and (evt.y > y1)):          
                         if self.cases[(i,j)].statut == "empty":
-                            self.cases[(i, j)].setRock(COLOR_P1)
+                            self.cases[(i, j)].setRock(self.colors["p1"])
                             self.client.Send({"action": "newPoint", "turn" : True, "coords" : (i,j)})
                             self.state=INITIAL
                             self.move = False
@@ -168,7 +174,7 @@ class GameWindow:
         (i,j) = data["coords"]
         turn = data["turn"]
 
-        self.cases[i, j].setRock(COLOR_P2)
+        self.cases[i, j].setRock(self.colors["p2"])
         self.ableToMove()
         if turn:
             self.state = ACTIVE

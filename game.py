@@ -31,13 +31,13 @@ class Case():
             elif c2[0] <= r < c2[1]: i = 1
             elif c3[0] <= r <= c3[1]: i = 3        
 
-            self.img = PhotoImage(file=f"assets/case{i}.png")
+            self.img = PhotoImage(master=self.canvas, file=f"assets/case{i}.png")
         elif self.statut == "castle":
-            self.img = PhotoImage(file="assets/chateau_bleu.png")
+            self.img = PhotoImage(master=self.canvas, file="assets/chateau_bleu.png")
         elif self.statut == "ennemy_castle":
-            self.img = PhotoImage(file="assets/chateau_rouge.png")
+            self.img = PhotoImage(master=self.canvas, file="assets/chateau_rouge.png")
         elif self.statut == "lake":
-            self.img = PhotoImage(file="assets/lac.png")
+            self.img = PhotoImage(master=self.canvas, file="assets/lac.png")
         
         self.id = self.canvas.create_image(x1, y1, image=self.img)
             
@@ -53,7 +53,7 @@ class Case():
         x1 = XMIN+(i*DIST)
         y1 = YMIN+(j*DIST)
 
-        self.rock_img = PhotoImage(file=f"assets/{color}_rock.png")
+        self.rock_img = PhotoImage(master=self.canvas, file=f"assets/{color}_rock.png")
         self.rock = self.canvas.create_image(x1, y1, image=self.rock_img)
         
 
@@ -69,9 +69,9 @@ class Player():
         y1 = YMIN+(j*DIST)
 
         if self.player == 0:
-            self.img = PhotoImage(file="assets/mage_bleu_droite.png")
+            self.img = PhotoImage(master=self.canvas, file="assets/mage_bleu_droite.png")
         else:
-            self.img = PhotoImage(file="assets/mage_rouge_gauche.png")
+            self.img = PhotoImage(master=self.canvas, file="assets/mage_rouge_gauche.png")
     
         self.id = self.canvas.create_image(x1, y1, image=self.img)
 
