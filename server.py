@@ -4,6 +4,11 @@ from time import sleep, localtime
 from PodSixNet.Server import Server
 from PodSixNet.Channel import Channel
 
+from tkinter import *
+
+WAITING = 0
+TORNAMENT = 1
+
 class ClientChannel(Channel):
     """
     This is the server representation of a connected client.
@@ -13,6 +18,7 @@ class ClientChannel(Channel):
 
         self.nickname = "anonymous"
         self.available = True
+        self.rating = 1000
         self.other = None
     
     def Close(self):
@@ -25,7 +31,12 @@ class ClientChannel(Channel):
         self.other.Send({"action": "newMove", "coords": data["coords"], "who": self.nickname})
     
     def Network_win(self, data):
-        #faire des trucs
+        g = self.rating
+        p = self.other.rating
+
+        self.rating = g + (100 - (1/3)*(g-p))
+        self.other.rating = p - (100 - (1/3)*(g-p))
+
         self.available = True
         self.other = None
 
@@ -35,16 +46,22 @@ class ClientChannel(Channel):
         self.other = None
 
     def Network_nickname(self, data):
-        self.nickname = data["nickname"]
-
-        if self.nickname in self._server.players:
-            self.Send({"action:": "disconnected"}) #balec juste tu peux pas te co
+        if self._server.state == TORNAMENT:
+            self.Send({"action": "alreadyStarted"})
             return
+        elif data["nickname"] in [p.nickname for p in self._server.players]:
+            self.Send({"action": "wrongNickname"})
+            return
+        self.nickname = data["nickname"]
 
         self._server.PrintPlayers()
         self.Send({"action": "start"})
 
     def Network_askMatch(self, data):
+        if self._server.state == WAITING:
+            self.Send({"action": "tornamentNotStarted"})
+            return
+
         nickname = data["nickname"]
         player = self._server.GetPlayer(nickname)
         print(f"Je suis {self.nickname} et je demande à {player.nickname} s'il veut jouer")
@@ -81,9 +98,14 @@ class MyServer(Server):
     
     def __init__(self, *args, **kwargs):
         Server.__init__(self, *args, **kwargs)
-
         self.players = {}
-        self.ranking = {}
+        self.state = WAITING
+
+        self.window = Tk()
+        self.window.title("Witcher Tornament - Server")
+        self.window.wm_minsize(320, 80)
+        self.btn = Button(self.window, text="Lancer le tournoi !", command=self.startTornament)
+        self.btn.pack(expand=True, fill=BOTH)
 
         print('Server launched')
     
@@ -98,8 +120,10 @@ class MyServer(Server):
         print("players' nicknames :",[p.nickname for p in self.players])
   
     def DelPlayer(self, player):
-        print("Deleting Player " + player.nickname + " at "+str(player.addr))
+        print("Deleting Player " + player.nickname + " at " + str(player.addr))
         del self.players[player]
+
+        self.SendPlayersList()
 
     def SendToOthers(self, data):
         [p.Send(data) for p in self.players if p.nickname != data["who"]]
@@ -108,17 +132,27 @@ class MyServer(Server):
         [p.Send(data) for p in self.players]
 
     def SendPlayersList(self):
-        self.Broadcast({"action": "playersList", "playersList": [(p.nickname, p.available) for p in self.players]})
+        self.Broadcast({"action": "playersList", "playersList": [(p.nickname, p.available, p.rating) for p in self.players]})
 
     def GetPlayer(self, nickname):
         for player in self.players:
             if player.nickname == nickname:
                 return player
 
+    def startTornament(self):
+        if self.state == TORNAMENT:
+            return
+
+        self.state = TORNAMENT
+        self.btn.config(text="Tournoi lancé !")
+        self.Broadcast({"action": "tornamentStarted"})
+
     def Launch(self):
         while True:
+            self.window.update()
             self.Pump()
             sleep(0.001)
+        exit()
 
 # get command line argument of server, port
 if len(sys.argv) != 2:

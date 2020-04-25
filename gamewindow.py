@@ -12,6 +12,9 @@ COLOR_P2 = "red"
 
 INITIAL = 0
 ACTIVE = 1
+DEAD = -1
+IN_GAME = 2
+WAITING = 3
 
 class GameWindow:
     def __init__(self, client, first):
@@ -39,8 +42,9 @@ class GameWindow:
         self.drawPlateau()
 
     def quit(self):
-        self.client.Send({"action" : "lost"})
-        self.window.destroy()
+        if messagebox.askokcancel("Abandon", "Êtes-vous sûr de vouloir abandonner ?"):
+            self.client.Send({"action" : "lost"})
+            self.window.destroy()
 
     def drawPlateau(self):
         #Draw castles
@@ -98,6 +102,7 @@ class GameWindow:
         self.client.Send({"action" : "lost"})
         messagebox.showinfo("Perdu", "Vous avez perdu !")
         self.window.destroy()
+        self.client.state = WAITING
 
     def playerMove(self, evt):
         if self.state == ACTIVE and self.move == False:
