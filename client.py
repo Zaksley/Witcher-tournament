@@ -18,7 +18,7 @@ class Client(ConnectionListener):
     def __init__(self, host, port):
         #SETUP GUI
         self.tableWindow = Tk()
-        self.tableWindow.title("Witcher Tornament ")
+        self.tableWindow.title("Witcher Tornament")
         self.tableWindow.protocol("WM_DELETE_WINDOW", self.quit)
         self.tableWindow.withdraw()
 
@@ -40,6 +40,7 @@ class Client(ConnectionListener):
             nickname = simpledialog.askstring("Nom", "Entrez votre nom : ").rstrip("\n")
         self.nickname = nickname
 
+        self.tableWindow.title(f"Witcher Tornament - {self.nickname}")
         self.tableWindow.deiconify()
 
         # SETUP CLIENT
