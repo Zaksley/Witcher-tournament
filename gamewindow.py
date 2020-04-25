@@ -31,7 +31,7 @@ class GameWindow:
         self.window.title(f"Witcher - {client.nickname}")
         self.window.wm_minsize(width=WIDTH, height=HEIGHT+30)
 
-        self.canvas = Canvas(self.window, width=WIDTH, height=HEIGHT, bg='white')
+        self.canvas = Canvas(self.window, width=WIDTH, height=HEIGHT, bg='green')
         self.quit_btn = Button(self.window, text='Quitter', command=self.quit)
 
         self.canvas.bind("<Button-1>", self.playerMove)
@@ -44,7 +44,7 @@ class GameWindow:
 
     def quit(self):
         if messagebox.askokcancel("Abandon", "Êtes-vous sûr de vouloir abandonner ?"):
-            self.client.Send({"action" : "lost"})
+            #self.client.Send({"action" : "lost"})
             self.window.destroy()
 
     def drawPlateau(self):
@@ -158,8 +158,8 @@ class GameWindow:
 
                     if ((evt.x < x2) and (evt.x > x1)) and ((evt.y  < y2) and (evt.y > y1)):          
                         if self.cases[(i,j)].statut == "empty":
-                            self.cases[(i, j)].setStatut("occupied", COLOR_P1)
-                            self.client.Send({"action": "newPoint", "turn" : True, "coords" : (i,j), "newStatut" : "occupied"})
+                            self.cases[(i, j)].setRock(COLOR_P1)
+                            self.client.Send({"action": "newPoint", "turn" : True, "coords" : (i,j)})
                             self.state=INITIAL
                             self.move = False
                             self.ableToMove()
@@ -167,9 +167,8 @@ class GameWindow:
     def newPoint(self, data):
         (i,j) = data["coords"]
         turn = data["turn"]
-        statut = data["newStatut"]
 
-        self.cases[i, j].setStatut(statut, COLOR_P2)
+        self.cases[i, j].setRock(COLOR_P2)
         self.ableToMove()
         if turn:
             self.state = ACTIVE

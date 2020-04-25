@@ -25,7 +25,7 @@ class ClientChannel(Channel):
         self._server.DelPlayer(self)
 
     def Network_newPoint(self, data):
-        self.other.Send({"action": "newPoint", "coords": data["coords"], "newStatut": data["newStatut"], "turn": data["turn"], "who": self.nickname})
+        self.other.Send({"action": "newPoint", "coords": data["coords"], "turn": data["turn"], "who": self.nickname})
 
     def Network_newMove(self, data):
         self.other.Send({"action": "newMove", "coords": data["coords"], "who": self.nickname})
