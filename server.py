@@ -19,10 +19,10 @@ class ClientChannel(Channel):
         self._server.DelPlayer(self)
 
     def Network_newPoint(self, data):
-        self._server.SendToOthers({"action": "newPoint", "coords": data["coords"], "newStatut": data["newStatut"], "turn": data["turn"], "who": self.nickname})
+        self.other.Send({"action": "newPoint", "coords": data["coords"], "newStatut": data["newStatut"], "turn": data["turn"], "who": self.nickname})
 
     def Network_newMove(self, data):
-        self._server.SendToOthers({"action": "newMove", "coords": data["coords"], "who": self.nickname})
+        self.other.Send({"action": "newMove", "coords": data["coords"], "who": self.nickname})
     
     def Network_win(self, data):
         #faire des trucs
@@ -30,7 +30,7 @@ class ClientChannel(Channel):
         self.other = None
 
     def Network_lost(self, data):
-        self._server.SendToOthers({"action": "win", "who": self.nickname})
+        self.other.Send({"action": "win", "who": self.nickname})
         self.available = True
         self.other = None
 
@@ -47,18 +47,23 @@ class ClientChannel(Channel):
     def Network_askMatch(self, data):
         nickname = data["nickname"]
         player = self._server.GetPlayer(nickname)
+        print(f"Je suis {self.nickname} et je demande à {player.nickname} s'il veut jouer")
         player.Send({"action": "askMatch", "nickname": self.nickname})
 
     def Network_matchAccepted(self, data):
         nickname = data["nickname"]
         player = self._server.GetPlayer(nickname)
 
+        print(f"je suis {self.nickname}, j'ai accepté un match avec {player.nickname}")
+
         self.other = player
         self.other.available = False
+        self.other.other = self
+
         self.available = False
 
-        self.launchGame(False)
-        self.other.launchGame(True)
+        self.launchGame(True) #False
+        self.other.launchGame(False) #True
 
     def Network_matchRefused(self, data):
         nickname = data["nickname"]

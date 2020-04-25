@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 from game import *
 
 NB_CASE_X = 9
@@ -23,7 +24,8 @@ class GameWindow:
 
         #SETUP GUI
         self.window = Tk()
-        self.window.title("Witcher")
+        self.window.protocol("WM_DELETE_WINDOW", self.quit)
+        self.window.title(f"Witcher - {client.nickname}")
 
         self.canvas = Canvas(self.window, width=WIDTH, height=HEIGHT, bg='white')
         self.quit_btn = Button(self.window, text='Quitter', command=self.quit)
@@ -37,7 +39,7 @@ class GameWindow:
         self.drawPlateau()
 
     def quit(self):
-        #Envoyer un signal de quitter au serveur
+        self.client.Send({"action" : "lost"})
         self.window.destroy()
 
     def drawPlateau(self):
@@ -94,6 +96,8 @@ class GameWindow:
         #Maybe quitter la fenêtre
         print("Vous avez perdu !")
         self.client.Send({"action" : "lost"})
+        messagebox.showinfo("Perdu", "Vous avez perdu !")
+        self.window.destroy()
 
     def playerMove(self, evt):
         if self.state == ACTIVE and self.move == False:

@@ -73,9 +73,9 @@ class Client(ConnectionListener):
     def askPlayersList(self):
         self.Send({"action": "playersList"})
 
-    def askMatch(self, name):
-        if messagebox.askokcancel("Match", f"Voulez vous défier {name} ?"):
-            self.Send({"action": "askMatch", "nickname": name})
+    def askMatch(self, nickname):
+        if messagebox.askokcancel("Match", f"Voulez vous défier {nickname} ?"):
+            self.Send({"action": "askMatch", "nickname": nickname})
 
     def Network_askMatch(self, data):
         if messagebox.askokcancel("Match", f"{data['nickname']} vous défie\nVoulez vous jouer contre lui ?"):
@@ -98,7 +98,11 @@ class Client(ConnectionListener):
 
     def Network_win(self, data):
         self.Send({"action": "win"})
+        self.game.window.destroy()
         print("Vous avez gagné !")
+        messagebox.showinfo("Gagné", "Vous avez gagné !")
+
+        self.askPlayersList()
 
     def Network_playersList(self, data):
         playersList = data["playersList"]
@@ -106,12 +110,16 @@ class Client(ConnectionListener):
         for child in self.playersFrame.winfo_children():
             child.destroy()
 
+        print("J'ai reçu les joueus :")
         for i in range(len(playersList)):
             name, free = playersList[i]
+            print(f"\t {name}, {free}")
             Label(self.playersFrame, text=name).grid(row=i, column=0)
             Label(self.playersFrame, text=" libre !" if free else " en  match...").grid(row=i, column=1)
             if free and name != self.nickname:
-                Button(self.playersFrame, text="Défier !", command=lambda: self.askMatch(name)).grid(row=i, column=2) #y'a un bullshit ici jsp pq
+                print(f"Je met un bouton à {name}")
+                nickname = name
+                Button(self.playersFrame, text="Défier !", command=lambda: self.askMatch(nickname)).grid(row=i, column=2) #y'a un bullshit ici jsp pq
 
     def Network_error(self, data):
         print('error:', data['error'][1])
