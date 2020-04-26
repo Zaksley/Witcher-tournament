@@ -1,4 +1,4 @@
-from tkinter import *
+"""from tkinter import *
 
 LEFT = 37
 UP = 38
@@ -19,3 +19,16 @@ def move(evt: Event):
 w.bind("<KeyRelease>", move)
 
 w.mainloop()
+"""
+
+from tkinter import ttk
+import tkinter as tk
+
+window = tk.Tk()
+style = ttk.Style(window)
+style.theme_use('vista')
+
+btn = ttk.Button(window, text="Hello")
+btn.pack()
+
+window.mainloop()
