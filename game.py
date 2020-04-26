@@ -7,7 +7,7 @@ DIST = 40
 R = 20
 
 class Case():
-    def __init__(self, canvas, coords, statut):
+    def __init__(self, canvas, coords, statut, first=True):
         self.canvas = canvas
         self.rock = None
         self.rock_img = None
@@ -33,9 +33,9 @@ class Case():
 
             self.img = PhotoImage(master=self.canvas, file=f"assets/case{i}.png")
         elif self.statut == "castle":
-            self.img = PhotoImage(master=self.canvas, file="assets/chateau_bleu.png")
+            self.img = PhotoImage(master=self.canvas, file=f"assets/chateau_{'bleu' if first else 'rouge'}.png")
         elif self.statut == "ennemy_castle":
-            self.img = PhotoImage(master=self.canvas, file="assets/chateau_rouge.png")
+            self.img = PhotoImage(master=self.canvas, file=f"assets/chateau_{'rouge' if first else 'bleu'}.png")
         elif self.statut == "lake":
             self.img = PhotoImage(master=self.canvas, file="assets/lac.png")
         
@@ -43,7 +43,7 @@ class Case():
             
 
     def changeColor(self, newColor):
-        self.canvas.itemconfig(self.id, fill = newColor)
+        self.canvas.itemconfig(self.id, fill=newColor)
         self.color = newColor
 
     def setRock(self, color):

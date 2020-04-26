@@ -65,8 +65,15 @@ class ClientChannel(Channel):
 
         nickname = data["nickname"]
         player = self._server.GetPlayer(nickname)
+
+
+        delta = abs(self.rating - player.rating)
+        if  delta >= 300:
+            self.Send({"action": "tooHigh"})
+            return
+
         print(f"Je suis {self.nickname} et je demande à {player.nickname} s'il veut jouer")
-        player.Send({"action": "askMatch", "nickname": self.nickname})
+        player.Send({"action": "askMatch", "nickname": self.nickname, "canRefuse": delta >= 200})
 
     def Network_matchAccepted(self, data):
         nickname = data["nickname"]
@@ -79,7 +86,6 @@ class ClientChannel(Channel):
         self.other.other = self
 
         self.available = False
-
 
         first = randint(0, 1)
         self.launchGame(first)

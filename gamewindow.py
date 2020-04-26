@@ -58,11 +58,11 @@ class GameWindow:
     def drawPlateau(self):
         #Draw castles
         if self.first:
-            self.cases[(0, 3)] = Case(self.canvas, (0, 3), "castle")
-            self.cases[(8, 3)] = Case(self.canvas, (8, 3), "ennemy_castle")
+            self.cases[(0, 3)] = Case(self.canvas, (0, 3), "castle", self.first)
+            self.cases[(8, 3)] = Case(self.canvas, (8, 3), "ennemy_castle", self.first)
         else:
-            self.cases[(8, 3)] = Case(self.canvas, (8, 3), "castle")
-            self.cases[(0, 3)] = Case(self.canvas, (0, 3), "ennemy_castle")
+            self.cases[(8, 3)] = Case(self.canvas, (8, 3), "castle", self.first)
+            self.cases[(0, 3)] = Case(self.canvas, (0, 3), "ennemy_castle", self.first)
 
         #Dessin de la grille
         for i in range(0, NB_CASE_X, 1):
@@ -209,6 +209,8 @@ if __name__ == "__main__":
     class FakeClient:
         def __init__(self):
             self.nickname = "yolo"
+        def Send(self, data):
+            pass
 
     w = GameWindow(FakeClient(), True, "yolo2")
     w.window.mainloop()

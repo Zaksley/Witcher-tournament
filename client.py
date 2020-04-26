@@ -66,6 +66,9 @@ class Client(ConnectionListener):
             sleep(0.001)
         exit()    
 
+    def Network_tooHigh(self, data):
+        messagebox.showerror("Erreur", "La différence de rating entre vous et votre adversaire est supérieure à 300 !")
+
     def Network_tornamentStarted(self, data):
         messagebox.showinfo("Tournoi", "Le tournoi a commencé !\nVous pouvez maintenant défier des adversaires")
 
@@ -89,6 +92,11 @@ class Client(ConnectionListener):
 
     def Network_askMatch(self, data):
         if self.state == IN_GAME:
+            return
+
+        if not data["canRefuse"]:
+            messagebox.showinfo("Match", f"{data['nickname']} vous défie !")
+            self.Send({"action": "matchAccepted", "nickname": data["nickname"]})
             return
 
         if messagebox.askokcancel("Match", f"{data['nickname']} vous défie\nVoulez vous jouer contre lui ?"):
