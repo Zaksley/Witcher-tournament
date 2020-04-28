@@ -87,6 +87,8 @@ class GameWindow:
         xl = 10 + 2*XMIN
         xr = DIST + 10 + WIDTH - BAND_WIDTH
 
+
+        #Draw ATH
         self.left_img = PhotoImage(master=self.canvas, file="assets/bandeau_bleu.png")
         self.left_band = self.canvas.create_image(xl, DIST, image=self.left_img)
 
@@ -95,6 +97,9 @@ class GameWindow:
 
         self.canvas.create_text(xl, DIST-7, text=self.client.nickname if self.first else self.other)
         self.canvas.create_text(xr-len(self.other)*2, DIST-7, text=self.other if self.first else self.client.nickname)
+
+        self.state_img = PhotoImage(master=self.canvas, file=f"assets/{'etat_bouger.png' if self.first else 'etat_attendre.png'}")
+        self.state_icon = self.canvas.create_image(xl + 110, DIST, image=self.state_img)
 
     def ableToMove(self):
         player = self.players[0] if self.first else self.players[1]
@@ -168,6 +173,9 @@ class GameWindow:
                         self.move = True
                         self.client.Send({"action" : "newMove", "coords" : (i,j)})
 
+                        self.state_img = PhotoImage(master=self.canvas, file="assets/etat_pierre.png")
+                        self.canvas.itemconfig(self.state_icon, image=self.state_img)
+
         elif self.state == ACTIVE and self.move == True:
             for i in range(0, NB_CASE_X, 1):
                 for j in range(0, NB_CASE_Y, 1):
@@ -183,6 +191,8 @@ class GameWindow:
                             self.client.Send({"action": "newPoint", "turn" : True, "coords" : (i,j)})
                             self.state=INITIAL
                             self.move = False
+                            self.state_img = PhotoImage(master=self.canvas, file="assets/etat_attendre.png")
+                            self.canvas.itemconfig(self.state_icon, image=self.state_img)
                             self.ableToMove()
 
     def newPoint(self, data):
@@ -190,9 +200,12 @@ class GameWindow:
         turn = data["turn"]
 
         self.cases[i, j].setRock(self.colors["p2"])
-        self.ableToMove()
         if turn:
             self.state = ACTIVE
+            self.state_img = PhotoImage(master=self.canvas, file="assets/etat_bouger.png")
+            self.canvas.itemconfig(self.state_icon, image=self.state_img)
+
+        self.ableToMove()
 
     def newMove(self, data):
         (i,j) = data["coords"]
