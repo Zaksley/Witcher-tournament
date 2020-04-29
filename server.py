@@ -102,7 +102,7 @@ class ClientChannel(Channel):
     def launchGame(self, first):
         self.Send({"action" : "launchGame", "first" : first, "nickname": self.other.nickname})
     
-class MyServer(Server):
+class GameyServer(Server):
     channelClass = ClientChannel
     
     def __init__(self, *args, **kwargs):
@@ -169,6 +169,6 @@ if len(sys.argv) != 2:
     print("e.g., python3", sys.argv[0], "localhost:31425")
 else:
     host, port = sys.argv[1].split(":")
-    s = MyServer(localaddr=(host, int(port)))
+    s = GameServer(localaddr=(host, int(port)))
     s.Launch()
 
