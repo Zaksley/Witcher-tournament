@@ -102,7 +102,7 @@ class ClientChannel(Channel):
     def launchGame(self, first):
         self.Send({"action" : "launchGame", "first" : first, "nickname": self.other.nickname})
     
-class GameyServer(Server):
+class GameServer(Server):
     channelClass = ClientChannel
     
     def __init__(self, *args, **kwargs):
