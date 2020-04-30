@@ -35,8 +35,8 @@ class ClientChannel(Channel):
         g = self.rating
         p = self.other.rating
 
-        self.rating = g + (100 - (1/3)*(g-p))
-        self.other.rating = p - (100 - (1/3)*(g-p))
+        self.rating = int(g + (100 - (1/3)*(g-p)))
+        self.other.rating = int(p - (100 - (1/3)*(g-p)))
 
         self.available = True
         self.other = None
