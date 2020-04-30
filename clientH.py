@@ -118,10 +118,11 @@ class Client(ConnectionListener):
     def Network_launchGame(self, data):
         first = data["first"]
         nickname = data["nickname"]
-        self.game = GameWindow(self, first, nickname)
-        self.askPlayersList()
+
         self.state = IN_GAME
         self.asked = False
+        self.askPlayersList()
+        self.game = GameWindow(self, first, nickname)
  
     def Network_newPoint(self, data):
         self.game.newPoint(data)
