@@ -75,7 +75,7 @@ class Client(ConnectionListener):
         messagebox.showinfo("Tournoi", "Le tournoi a commencé !\nVous pouvez maintenant défier des adversaires")
 
     def Network_tornamentNotStarted(self, data):
-        messagebox.showerror("Erreur", "Attendez, le tournoi n'a pas ecnore commencé !")
+        messagebox.showerror("Erreur", "Attendez, le tournoi n'a pas encore commencé !")
         self.asked = False
 
     def Network_alreadyStarted(self, data):
