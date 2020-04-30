@@ -26,6 +26,7 @@ class Client(ConnectionListener):
         #GAME WINDOW
         self.game = None
         self.state = WAITING
+        self.asked = False
 
         # GET A USERNAME
         nickname = ""
@@ -87,11 +88,16 @@ class Client(ConnectionListener):
         self.Send({"action": "playersList"})
 
     def askMatch(self, nickname):
+        if self.state == IN_GAME or self.asked:
+            return
+
         if messagebox.askokcancel("Match", f"Voulez vous défier {nickname} ?"):
             self.Send({"action": "askMatch", "nickname": nickname})
+            self.asked = True
 
     def Network_askMatch(self, data):
-        if self.state == IN_GAME:
+        if self.asked:
+            self.Send({"action": "matchRefused", "nickname": data["nickname"]})
             return
 
         if not data["canRefuse"]:
@@ -105,6 +111,7 @@ class Client(ConnectionListener):
 
     def Network_matchRefused(self, data):
         messagebox.showinfo("Match refusé", f"{data['nickname']} ne veut pas jouer avec vous...")
+        self.asked = False
 
     def Network_launchGame(self, data):
         first = data["first"]
@@ -112,6 +119,7 @@ class Client(ConnectionListener):
         self.game = GameWindow(self, first, nickname)
         self.askPlayersList()
         self.state = IN_GAME
+        self.asked = False
  
     def Network_newPoint(self, data):
         self.game.newPoint(data)
