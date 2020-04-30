@@ -42,6 +42,8 @@ class ClientChannel(Channel):
         self.available = True
         self.other = None
 
+        self._server.SendPlayersList()
+
     def Network_lost(self, data):
         self.other.Send({"action": "win", "who": self.nickname})
         self.available = True

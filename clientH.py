@@ -98,16 +98,18 @@ class Client(ConnectionListener):
             self.asked = True
 
     def Network_askMatch(self, data):
-        if self.asked:
+        if self.asked or self.state == IN_GAME:
             self.Send({"action": "matchRefused", "nickname": data["nickname"]})
             return
 
         if not data["canRefuse"]:
-            messagebox.showinfo("Match", f"{data['nickname']} vous défie !")
             self.Send({"action": "matchAccepted", "nickname": data["nickname"]})
+            self.state = IN_GAME
+            messagebox.showinfo("Match", f"{data['nickname']} vous défie !")
             return
 
         if messagebox.askokcancel("Match", f"{data['nickname']} vous défie\nVoulez vous jouer contre lui ?"):
+            self.state = IN_GAME
             self.Send({"action": "matchAccepted", "nickname": data["nickname"]})
         else: self.Send({"action": "matchRefused", "nickname": data["nickname"]})
 
@@ -138,8 +140,6 @@ class Client(ConnectionListener):
 
         print("Vous avez gagné !")
         messagebox.showinfo("Gagné", "Vous avez gagné !")
-
-        self.askPlayersList()
 
     def Network_playersList(self, data):
         playersList = data["playersList"]

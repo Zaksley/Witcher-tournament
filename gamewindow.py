@@ -47,8 +47,6 @@ class GameWindow:
         #SETUP GAME
         self.drawPlateau()
 
-        messagebox.showinfo("Début", "Vous commencez !" if first else f"{self.other} commence !")
-
     def quit(self):
         if messagebox.askokcancel("Abandon", "Êtes-vous sûr de vouloir abandonner ?"):
             self.client.Send({"action" : "lost"})
