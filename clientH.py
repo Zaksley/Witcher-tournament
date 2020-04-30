@@ -156,8 +156,9 @@ class Client(ConnectionListener):
             Label(self.playersFrame, text=" libre !" if free else " en  match...", fg="green" if free else "red").grid(row=i, column=2, padx=(10, 0), pady=(10, 0))
             if free == True and name != self.nickname:
                 print(f"Je met un bouton à {name}")
-                yolo = name
-                Button(self.playersFrame, text="Défier !", command=lambda: self.askMatch(yolo)).grid(row=i, column=3, padx=(5, 0), pady=(5, 0))
+                nickname = name
+                func = lambda name: lambda name=name: self.askMatch(name)
+                Button(self.playersFrame, text="Défier !", command=func(nickname)).grid(row=i, column=3, padx=(5, 0), pady=(5, 0))
 
     def Network_error(self, data):
         print('error:', data['error'][1])
