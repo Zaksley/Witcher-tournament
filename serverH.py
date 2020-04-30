@@ -7,6 +7,7 @@ from PodSixNet.Channel import Channel
 
 from tkinter import *
 
+DEAD = -1
 WAITING = 0
 TORNAMENT = 1
 
@@ -113,6 +114,7 @@ class GameServer(Server):
         self.window = Tk()
         self.window.title("Witcher Tornament - Server")
         self.window.wm_minsize(320, 80)
+        self.window.protocol("WM_DELETE_WINDOW", self.quit)
         self.btn = Button(self.window, text="Lancer le tournoi !", command=self.startTornament)
         self.btn.pack(expand=True, fill=BOTH)
 
@@ -157,11 +159,14 @@ class GameServer(Server):
         self.Broadcast({"action": "tornamentStarted"})
 
     def Launch(self):
-        while True:
+        while self.state != DEAD:
             self.window.update()
             self.Pump()
             sleep(0.001)
-        exit()
+        sys.exit()
+
+    def quit(self):
+        self.state = DEAD
 
 # get command line argument of server, port
 if len(sys.argv) != 2:
