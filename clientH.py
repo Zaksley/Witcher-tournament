@@ -69,12 +69,14 @@ class Client(ConnectionListener):
 
     def Network_tooHigh(self, data):
         messagebox.showerror("Erreur", "La différence de rating entre vous et votre adversaire est supérieure à 300 !")
+        self.asked = False
 
     def Network_tornamentStarted(self, data):
         messagebox.showinfo("Tournoi", "Le tournoi a commencé !\nVous pouvez maintenant défier des adversaires")
 
     def Network_tornamentNotStarted(self, data):
         messagebox.showerror("Erreur", "Attendez, le tournoi n'a pas ecnore commencé !")
+        self.asked = False
 
     def Network_alreadyStarted(self, data):
         messagebox.showerror("Erreur", "Le tournoi a déjà commencé !")
