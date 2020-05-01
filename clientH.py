@@ -17,11 +17,33 @@ class Client(ConnectionListener):
         self.tableWindow = Tk()
         self.tableWindow.title("Witcher Tornament")
         self.tableWindow.protocol("WM_DELETE_WINDOW", self.quit)
+        self.tableWindow.wm_maxsize(400, 300)
         self.tableWindow.wm_minsize(400, 300)
         self.tableWindow.withdraw()
 
-        self.playersFrame = LabelFrame(self.tableWindow, text="Tableau des scores")
-        self.playersFrame.pack(side=LEFT, fill=BOTH, expand=True, padx=10, pady=10)
+        self.background_image = PhotoImage(file="assets/background.png")
+        self.canvas = Canvas(self.tableWindow)
+        self.canvas.create_image(200, 150, image=self.background_image)
+
+        #SCROLL PART
+        scroll_canvas = Canvas(self.canvas, width=230, height=250, bg="#fef4c1")
+        scrollbar = Scrollbar(self.canvas, orient="vertical", command=scroll_canvas.yview)
+        self.playersFrame = Frame(scroll_canvas, bg="#fef4c1")
+
+        self.playersFrame.bind(
+            "<Configure>",
+            lambda e: scroll_canvas.configure(
+                scrollregion=scroll_canvas.bbox("all")
+            )
+        )
+
+        scroll_canvas.create_window((0, 0), window=self.playersFrame, anchor="nw")
+        scroll_canvas.configure(yscrollcommand=scrollbar.set)
+
+        scroll_canvas.place(x=7, y=35)
+        scrollbar.pack(side="right", fill="y")
+
+        self.canvas.pack(padx=0, pady=0, expand=True, fill=BOTH)
 
         #GAME WINDOW
         self.game = None
@@ -149,13 +171,15 @@ class Client(ConnectionListener):
         for child in self.playersFrame.winfo_children():
             child.destroy()
 
+        playersList = [("mmmmmmm", False, 1000)] * 20
+
         print("J'ai reçu les joueus :")
         for i in range(len(playersList)):
             name, free, rating = playersList[i]
             print(f"\t {name}, {free}")
-            Label(self.playersFrame, text=f"{i+1} - {rating} ").grid(row=i, column=0, padx=(10, 0), pady=(10, 0))
-            Label(self.playersFrame, text=name).grid(row=i, column=1, padx=(10, 0), pady=(10, 0))
-            Label(self.playersFrame, text=" libre !" if free else " en  match...", fg="green" if free else "red").grid(row=i, column=2, padx=(10, 0), pady=(10, 0))
+            Label(self.playersFrame, text=f"{i+1} - {rating}", bg="#fef4c1").grid(row=i, column=0, padx=(0, 0), pady=(10, 0))
+            Label(self.playersFrame, text=name, bg="#fef4c1").grid(row=i, column=1, padx=(0, 0), pady=(10, 0))
+            Label(self.playersFrame, text=" libre !" if free else " en  match...", fg="green" if free else "red", bg="#fef4c1").grid(row=i, column=2, padx=(5, 0), pady=(10, 0))
             if free == True and name != self.nickname:
                 print(f"Je met un bouton à {name}")
                 nickname = name

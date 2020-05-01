@@ -1,34 +1,28 @@
-"""from tkinter import *
-
-LEFT = 37
-UP = 38
-RIGHT= 39
-DOWN = 40
-
-w = Tk()
-c = Canvas(w, width=400, height=300)
-c.pack(fill=BOTH, expand=True)
-
-img = PhotoImage(file="assets/mage_bleu_droite.png")
-mage = c.create_image(50, 50, image=img)
-
-def move(evt: Event):
-    if evt.keycode == RIGHT:
-        c.move(mage, 10, 0)
-
-w.bind("<KeyRelease>", move)
-
-w.mainloop()
-"""
-
-from tkinter import ttk
 import tkinter as tk
+from tkinter import ttk
 
-window = tk.Tk()
-style = ttk.Style(window)
-style.theme_use('vista')
+root = tk.Tk()
+container = ttk.Frame(root)
+canvas = tk.Canvas(container)
+scrollbar = ttk.Scrollbar(container, orient="vertical", command=canvas.yview)
+scrollable_frame = ttk.Frame(canvas)
 
-btn = ttk.Button(window, text="Hello")
-btn.pack()
+scrollable_frame.bind(
+    "<Configure>",
+    lambda e: canvas.configure(
+        scrollregion=canvas.bbox("all")
+    )
+)
 
-window.mainloop()
+canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+
+canvas.configure(yscrollcommand=scrollbar.set)
+
+for i in range(50):
+    ttk.Label(scrollable_frame, text="Sample scrolling label").pack()
+
+container.pack()
+canvas.pack(side="left", fill="both", expand=True)
+scrollbar.pack(side="right", fill="y")
+
+root.mainloop()
