@@ -134,6 +134,7 @@ class Client(ConnectionListener):
 
     def Network_win(self, data):
         self.Send({"action": "win"})
+        self.Loop()
 
         self.game.window.destroy()
         self.state = WAITING
