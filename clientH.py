@@ -26,7 +26,7 @@ class Client(ConnectionListener):
         self.canvas.create_image(225, 150, image=self.background_image)
 
         #SCROLL PART
-        scroll_canvas = Canvas(self.canvas, width=280, height=250, bg="#fef4c1")
+        scroll_canvas = Canvas(self.canvas, width=278, height=250, bg="#fef4c1")
         scrollbar = Scrollbar(self.canvas, orient="vertical", command=scroll_canvas.yview)
 
         self.playersFrame = Frame(scroll_canvas, bg="#fef4c1")
@@ -35,7 +35,7 @@ class Client(ConnectionListener):
         scroll_canvas.create_window((0, 0), window=self.playersFrame, anchor="nw")
         scroll_canvas.configure(yscrollcommand=scrollbar.set)
 
-        scroll_canvas.place(x=11, y=35)
+        scroll_canvas.place(x=12, y=35)
         scrollbar.pack(side="right", fill="y")
 
         self.canvas.pack(padx=0, pady=0, expand=True, fill=BOTH)
