@@ -16,6 +16,7 @@ class Client(ConnectionListener):
         #SETUP GUI
         self.tableWindow = Tk()
         self.tableWindow.title("Witcher Tornament")
+        self.tableWindow.iconphoto(False, PhotoImage(file='assets/mage_bleu_droite.png'))
         self.tableWindow.protocol("WM_DELETE_WINDOW", self.quit)
         self.tableWindow.wm_maxsize(450, 300)
         self.tableWindow.wm_minsize(450, 300)
@@ -172,7 +173,7 @@ class Client(ConnectionListener):
             print(f"\t {name}, {free}")
             Label(self.playersFrame, text=f"{i+1} - {rating}", bg="#fef4c1").grid(row=i, column=0, padx=(0, 0), pady=(10, 0))
             Label(self.playersFrame, text=name, bg="#fef4c1").grid(row=i, column=1, padx=(0, 0), pady=(10, 0))
-            Label(self.playersFrame, text=" libre !" if free else " en  match...", fg="green" if free else "red", bg="#fef4c1").grid(row=i, column=2, padx=(0, 0), pady=(10, 0))
+            Label(self.playersFrame, text="libre !" if free else "en  match...", fg="green" if free else "red", bg="#fef4c1").grid(row=i, column=2, padx=(0, 0), pady=(10, 0))
             if free == True and name != self.nickname:
                 print(f"Je met un bouton à {name}")
                 nickname = name

@@ -115,6 +115,7 @@ class GameServer(Server):
 
         self.window = Tk()
         self.window.title("Witcher Tornament - Server")
+        self.window.iconphoto(False, PhotoImage(file='assets/mage_bleu_droite.png'))
         self.window.wm_minsize(320, 80)
         self.window.protocol("WM_DELETE_WINDOW", self.quit)
         self.btn = Button(self.window, text="Lancer le tournoi !", command=self.startTornament)

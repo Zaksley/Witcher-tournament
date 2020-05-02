@@ -31,6 +31,7 @@ class GameWindow:
 
         #SETUP GUI
         self.window = Tk()
+        self.window.iconphoto(False, PhotoImage(master=self.window, file='assets/mage_bleu_droite.png'))
         self.window.protocol("WM_DELETE_WINDOW", self.quit)
         self.window.title(f"Witcher - {client.nickname}")
         self.window.wm_minsize(width=WIDTH, height=HEIGHT+30)
