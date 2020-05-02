@@ -169,7 +169,6 @@ class Client(ConnectionListener):
 
         for i in range(len(playersList)):
             name, free, rating = playersList[i]
-            print(f"\t {name}, {free}")
             Label(self.playersFrame, text=f"{i+1} - {rating}", bg="#fef4c1").grid(row=i, column=0, padx=(0, 0), pady=(10, 0))
             Label(self.playersFrame, text=name, bg="#fef4c1").grid(row=i, column=1, padx=(0, 0), pady=(10, 0))
             Label(self.playersFrame, text="libre !" if free else "en  match...", fg="green" if free else "red", bg="#fef4c1").grid(row=i, column=2, padx=(0, 0), pady=(10, 0))
