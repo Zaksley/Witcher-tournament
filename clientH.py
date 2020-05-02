@@ -134,6 +134,7 @@ class Client(ConnectionListener):
     def Network_matchRefused(self, data):
         messagebox.showinfo("Match refusé", f"{data['nickname']} ne veut pas jouer avec vous...")
         self.asked = False
+        self.state = WAITING
 
     def Network_launchGame(self, data):
         first = data["first"]
@@ -157,7 +158,6 @@ class Client(ConnectionListener):
         self.game.window.destroy()
         self.state = WAITING
 
-        print("Vous avez gagné !")
         messagebox.showinfo("Gagné", "Vous avez gagné !")
 
     def Network_playersList(self, data):
@@ -167,7 +167,6 @@ class Client(ConnectionListener):
         for child in self.playersFrame.winfo_children():
             child.destroy()
 
-        print("J'ai reçu les joueus :")
         for i in range(len(playersList)):
             name, free, rating = playersList[i]
             print(f"\t {name}, {free}")
@@ -175,7 +174,6 @@ class Client(ConnectionListener):
             Label(self.playersFrame, text=name, bg="#fef4c1").grid(row=i, column=1, padx=(0, 0), pady=(10, 0))
             Label(self.playersFrame, text="libre !" if free else "en  match...", fg="green" if free else "red", bg="#fef4c1").grid(row=i, column=2, padx=(0, 0), pady=(10, 0))
             if free == True and name != self.nickname:
-                print(f"Je met un bouton à {name}")
                 nickname = name
                 func = lambda name: lambda name=name: self.askMatch(name)
                 Button(self.playersFrame, text="Défier !", command=func(nickname)).grid(row=i, column=3, padx=(5, 0), pady=(5, 0))

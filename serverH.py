@@ -69,6 +69,9 @@ class ClientChannel(Channel):
         nickname = data["nickname"]
         player = self._server.GetPlayer(nickname)
 
+        if player == None:
+            self.Send({"action": "matchRefused", "nickname": nickname})
+            return
 
         delta = abs(self.rating - player.rating)
         if  delta >= 300:
@@ -81,6 +84,10 @@ class ClientChannel(Channel):
     def Network_matchAccepted(self, data):
         nickname = data["nickname"]
         player = self._server.GetPlayer(nickname)
+
+        if player == None:
+            self.Send({"action": "matchRefused", "nickname": nickname})
+            return
 
         print(f"je suis {self.nickname}, j'ai accepté un match avec {player.nickname}")
 
