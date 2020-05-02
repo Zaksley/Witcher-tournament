@@ -195,7 +195,6 @@ if len(sys.argv) != 2:
 
 host, port = sys.argv[1].split(":")
 client = Client(host, int(port))
-sleep(0.5)
+sleep(1)
 # first loop to say to the server that I exist
 client.Loop()
-
