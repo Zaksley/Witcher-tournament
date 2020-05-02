@@ -126,6 +126,7 @@ class GameWindow:
         #Maybe quitter la fenêtre
         print("Vous avez perdu !")
         self.client.Send({"action" : "lost"})
+        self.client.Loop()
         messagebox.showinfo("Perdu", "Vous avez perdu !")
         self.window.destroy()
         self.client.state = WAITING
@@ -216,6 +217,8 @@ class GameWindow:
         if not self.cases[i, j].statut in forbid: self.cases[i, j].statut = "occupied"
 
         player.move((i, j))
+
+        self.ableToMove()
 
 if __name__ == "__main__":
     class FakeClient:
