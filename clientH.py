@@ -152,6 +152,12 @@ class Client(ConnectionListener):
     def Network_newMove(self, data):
         self.game.newMove(data)
 
+    def Network_lastCheck(self, data):
+        self.game.lastCheck(data)
+
+    def Network_isBlocked(self, data):
+        self.game.isBlocked(data)
+
     def Network_win(self, data):
         self.Send({"action": "win"})
         self.Loop()

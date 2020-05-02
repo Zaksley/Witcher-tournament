@@ -31,6 +31,12 @@ class ClientChannel(Channel):
 
     def Network_newMove(self, data):
         self.other.Send({"action": "newMove", "coords": data["coords"], "who": self.nickname})
+
+    def Network_isBlocked(self, data):
+        self.other.Send({"action": "isBlocked"})
+
+    def Network_lastCheck(self, data):
+        self.other.Send({"action": "lastCheck", "blocked": data["blocked"]})
     
     def Network_win(self, data):
         g = self.rating

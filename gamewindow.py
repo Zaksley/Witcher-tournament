@@ -193,7 +193,48 @@ class GameWindow:
                             self.move = False
                             self.state_img = PhotoImage(master=self.canvas, file="assets/etat_attendre.png")
                             self.canvas.itemconfig(self.state_icon, image=self.state_img)
-                            self.ableToMove()
+
+                            self.client.Send({"action": "isBlocked"})
+
+    def lastCheck(self, data):
+        blocked = data["blocked"]
+
+        if not blocked:
+            self.ableToMove()
+
+    def isBlocked(self, data):
+        blocked = True
+
+        player = self.players[0] if self.first else self.players[1]
+        (i, j) = player.coords
+        for x in [-1, 0, 1]:
+            for y in [-1, 0, 1]:
+                #Cas du joueur
+                if x == 0 and y == 0:
+                    continue
+
+                xx = i+x
+                yy = j+y
+
+                #Sort du plateau de jeu
+                if xx < 0 or xx > NB_CASE_X-1 or yy < 0 or yy > NB_CASE_Y-1:
+                    continue
+                
+                #On trouve une case disponible
+                statut = self.cases[xx, yy].statut
+                if statut in ["empty", "castle"]:
+                    blocked = False
+
+        if blocked:
+            print("Vous avez perdu !")
+            self.client.Send({"action" : "lost"})
+            self.client.Loop()
+            messagebox.showinfo("Perdu", "Vous avez perdu !")
+            self.window.destroy()
+            self.client.state = WAITING
+        else:
+            self.client.Send({"action": "lastCheck", "blocked": blocked})
+            self.client.Loop()
 
     def newPoint(self, data):
         (i,j) = data["coords"]
