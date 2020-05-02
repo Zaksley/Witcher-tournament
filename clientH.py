@@ -48,8 +48,9 @@ class Client(ConnectionListener):
 
         # GET A USERNAME
         nickname = ""
-        while nickname in [None, ""] or len(nickname) > 12:
+        while nickname == "" or len(nickname) > 12:
             nickname = simpledialog.askstring("Pseudo", "Entrez votre pseudo : ")
+            if nickname == None: exit()
         self.nickname = nickname
 
         self.tableWindow.title(f"Witcher Tornament - {self.nickname}")
