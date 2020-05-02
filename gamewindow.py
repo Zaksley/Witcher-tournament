@@ -246,8 +246,6 @@ class GameWindow:
             self.state_img = PhotoImage(master=self.canvas, file="assets/etat_bouger.png")
             self.canvas.itemconfig(self.state_icon, image=self.state_img)
 
-        self.ableToMove()
-
     def newMove(self, data):
         (i,j) = data["coords"]
 
