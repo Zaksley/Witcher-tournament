@@ -198,3 +198,4 @@ client = Client(host, int(port))
 sleep(1)
 # first loop to say to the server that I exist
 client.Loop()
+sleep(1)
