@@ -14,4 +14,4 @@ Files needed for clientH.py :
 
 Files needed for serverH.py :
 
-- `assets/`
+- `assets/mage_bleu_droite.png`
